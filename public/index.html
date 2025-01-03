@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FastEat Dashboard</title>
+        
+        <!-- Styles -->
+        <link rel="stylesheet" href="/src/styles.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <!-- Core Dependencies -->
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+        
+        <!-- Chart Libraries -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.10.3/Recharts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <!-- Application Scripts -->
+        <script src="dist/components.js"></script>
+    <script src="dist/scripts.js"></script>
+    </body>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="assets/fasteatlogo.png" alt="FastEat" class="logo-image" />
+                </div>
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="nav-links">
+                <li class="active">
+                    <a href="#" data-page="dashboard">
+                        <i class="fas fa-th-large"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="profile">
+                        <i class="fas fa-user"></i>
+                        <span class="nav-text">Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="analysis">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="nav-text">Analysis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="accounting">
+                        <i class="fas fa-calculator"></i>
+                        <span class="nav-text">Accounting</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="nav-text">Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Theme Toggle -->
+            <div class="theme-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider round"></span>
+                    <i class="fas fa-sun light-icon"></i>
+                    <i class="fas fa-moon dark-icon"></i>
+                </label>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <!-- Header -->
+            <header>
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 id="pageTitle">Dashboard</h1>
+                        <div class="breadcrumb">
+                            <span class="current-page">Home</span>
+                            <i class="fas fa-chevron-right"></i>
+                            <span class="current-section">Dashboard</span>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <img src="assets/pepe.png" alt="User Avatar" class="avatar">
+                            <div class="user-details">
+                                <span class="user-name">Declan Gordon</span>
+                                <span class="user-role">System Administrator</span>
+                            </div>
+                        </div>
+                        <button class="home-btn">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <div class="dashboard-content" id="dashboard-page">
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <select id="orderYear" class="filter-select">
+                                <option value="">Select Year</option>
+                            </select>
+                            <select id="orderMonth" class="filter-select">
+                                <option value="">Select Month</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select id="citySelect" class="filter-select">
+                                <option value="">Select City</option>
+                            </select>
+                            <select id="restaurantSelect" class="filter-select">
+                                <option value="">Select Restaurant</option>
+                            </select>
+                        </div>
+                        <button id="applyFilters" class="filter-button">
+                            <i class="fas fa-filter"></i>
+                            <span>Apply Filters</span>
+                        </button>
+                    </div>
+                </div><!-- Dashboard Metrics -->
+                <div class="dashboard-metrics"></div>
+
+                <!-- Results Section -->
+                <div class="results-section">
+                    <div class="orders-section">
+                        <div class="section-header">
+                            <h2>Orders</h2>
+                            <div class="section-controls">
+                                <select class="view-type-select">
+                                    <option value="list">List View</option>
+                                    <option value="grid">Grid View</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="orders-list">
+                            <!-- Orders will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="feedback-section">
+                        <div class="section-header">
+                            <h2>Feedback</h2>
+                            <div class="section-controls">
+                                <select class="feedback-filter">
+                                    <option value="all">All Feedback</option>
+                                    <option value="positive">Positive Only</option>
+                                    <option value="negative">Negative Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="feedback-list">
+                            <!-- Feedback will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div class="profile-content hidden" id="profile-page">
+                <div class="profile-grid">
+                    <div class="profile-card main-info">
+                        <div class="profile-header">
+                            <img src="assets/pepe.png" alt="Profile Avatar" class="profile-avatar">
+                            <div class="profile-info">
+                                <h2>Declan Gordon</h2>
+                                <p class="role">System Administrator</p>
+                                <p class="member-since">Member since: 2022</p>
+                            </div>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">245</span>
+                                <span class="stat-label">Total Actions</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">89%</span>
+                                <span class="stat-label">Response Rate</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">4.8/5</span>
+                                <span class="stat-label">Rating</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-card contact-info">
+                        <h3><i class="fas fa-address-card"></i> Contact Information</h3>
+                        <div class="info-group">
+                            <label>Email</label>
+                            <p>declan.gordon@fasteat.com</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Phone</label>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Location</label>
+                            <p>Rome, Italy</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-card responsibilities">
+                        <h3><i class="fas fa-tasks"></i> Responsibilities</h3>
+                        <ul class="responsibility-list">
+                            <li>System Administration</li>
+                            <li>User Management</li>
+                            <li>Security Oversight</li>
+                            <li>Performance Monitoring</li>
+                            <li>Data Analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Page -->
+            <div class="analysis-content hidden" id="analysis-page">
+                <!-- Analysis content will be rendered by React -->
+            </div>
+
+            <!-- Accounting Page -->
+            <div class="accounting-content hidden" id="accounting-page">
+                <!-- Accounting content will be rendered by React -->
+            </div>
+
+            <!-- Messages Page -->
+            <div class="messages-content hidden" id="messages-page">
+                <div class="messages-container">
+                    <div class="messages-sidebar">
+                        <div class="messages-header">
+                            <h2>Messages</h2>
+                            <button class="new-message-btn">
+                                <i class="fas fa-plus"></i>
+                                New Message
+                            </button>
+                        </div>
+                        <div class="message-filters">
+                            <button class="filter-btn active" data-filter="all">
+                                <i class="fas fa-inbox"></i>
+                                All Messages
+                            </button>
+                            <button class="filter-btn" data-filter="unread">
+                                <i class="fas fa-envelope"></i>
+                                Unread
+                            </button>
+                            <button class="filter-btn" data-filter="sent">
+                                <i class="fas fa-paper-plane"></i>
+                                Sent
+                            </button>
+                        </div>
+                        <div class="messages-list">
+                            <!-- Messages will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <div class="message-compose hidden">
+                            <div class="compose-header">
+                                <h3>New Message</h3>
+                                <button class="close-compose">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <form id="messageForm" class="compose-form">
+                                <div class="form-group">
+                                    <select name="restaurantId" required>
+                                        <option value="">Select Restaurant</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="subject" placeholder="Subject" required>
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="content" placeholder="Message content..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <select name="priority">
+                                        <option value="normal">Normal Priority</option>
+                                        <option value="high">High Priority</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="send-btn">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Send
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="message-view">
+                            <!-- Selected message content will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="settings-content hidden" id="settings-page">
+                <div class="settings-grid">
+                    <div class="settings-sidebar">
+                        <div class="settings-nav">
+                            <button class="settings-nav-item active" data-section="profile">
+                                <i class="fas fa-user"></i>
+                                Profile Settings
+                            </button>
+                            <button class="settings-nav-item" data-section="notifications">
+                                <i class="fas fa-bell"></i>
+                                Notifications
+                            </button>
+                            <button class="settings-nav-item" data-section="appearance">
+                                <i class="fas fa-paint-brush"></i>
+                                Appearance
+                            </button>
+                            <button class="settings-nav-item" data-section="privacy">
+                                <i class="fas fa-shield-alt"></i>
+                                Privacy & Security
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-content-area">
+                        <!-- Profile Settings -->
+                        <div class="settings-section active" id="profile-settings">
+                            <h2>Profile Settings</h2>
+                            <form id="profileSettingsForm">
+                                <div class="settings-group">
+                                    <label>Profile Picture</label>
+                                    <div class="avatar-upload">
+                                        <img src="assets/pepe.png" alt="Profile Picture" class="current-avatar">
+                                        <button type="button" class<button type="button" class="upload-btn">
+                                            <i class="fas fa-camera"></i>
+                                            Change Picture
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="settings-group">
+                                    <label for="settingsName">Full Name</label>
+                                    <input type="text" id="settingsName" name="name" value="Declan Gordon" />
+                                </div>
+                                <div class="settings-group">
+                                    <label for="settingsEmail">Email</label>
+                                    <input type="email" id="settingsEmail" name="email" value="declan.gordon@fasteat.com" />
+                                </div>
+                                <div class="settings-group">
+                                    <label for="settingsPhone">Phone</label>
+                                    <input type="tel" id="settingsPhone" name="phone" value="+1 (555) 123-4567" />
+                                </div>
+                                <div class="settings-group">
+                                    <label for="settingsTimezone">Timezone</label>
+                                    <select id="settingsTimezone" name="timezone">
+                                        <option value="UTC">UTC</option>
+                                        <option value="UTC+1" selected>UTC+1 (Rome)</option>
+                                        <option value="UTC+2">UTC+2</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="save-button">Save Changes</button>
+                            </form>
+                        </div>
+
+                        <!-- Notification Settings -->
+                        <div class="settings-section" id="notification-settings">
+                            <h2>Notification Settings</h2>
+                            <form id="notificationSettingsForm">
+                                <div class="settings-group">
+                                    <label class="toggle-label">
+                                        <span>Email Notifications</span>
+                                        <label class="switch">
+                                            <input type="checkbox" name="emailNotifications" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="settings-group">
+                                    <label class="toggle-label">
+                                        <span>Browser Notifications</span>
+                                        <label class="switch">
+                                            <input type="checkbox" name="browserNotifications" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="settings-group">
+                                    <label class="toggle-label">
+                                        <span>Order Updates</span>
+                                        <label class="switch">
+                                            <input type="checkbox" name="orderUpdates" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <button type="submit" class="save-button">Save Notification Settings</button>
+                            </form>
+                        </div>
+
+                        <!-- Appearance Settings -->
+                        <div class="settings-section" id="appearance-settings">
+                            <h2>Appearance Settings</h2>
+                            <form id="appearanceSettingsForm">
+                                <div class="settings-group">
+                                    <label>Theme</label>
+                                    <div class="theme-options">
+                                        <button type="button" class="theme-option active" data-theme="light">
+                                            <i class="fas fa-sun"></i>
+                                            Light
+                                        </button>
+                                        <button type="button" class="theme-option" data-theme="dark">
+                                            <i class="fas fa-moon"></i>
+                                            Dark
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="settings-group">
+                                    <label for="settingsLanguage">Language</label>
+                                    <select id="settingsLanguage" name="language">
+                                        <option value="en">English</option>
+                                        <option value="it">Italian</option>
+                                        <option value="tr">Turkish</option>
+                                    </select>
+                                </div>
+                                <div class="settings-group">
+                                    <label class="toggle-label">
+                                        <span>Compact Mode</span>
+                                        <label class="switch">
+                                            <input type="checkbox" name="compactMode">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <button type="submit" class="save-button">Save Appearance Settings</button>
+                            </form>
+                        </div>
+
+                        <!-- Privacy Settings -->
+                        <div class="settings-section" id="privacy-settings">
+                            <h2>Privacy & Security Settings</h2>
+                            <form id="privacySettingsForm">
+                                <div class="settings-group">
+                                    <label class="toggle-label">
+                                        <span>Two-Factor Authentication</span>
+                                        <label class="switch">
+                                            <input type="checkbox" name="twoFactorAuth">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="settings-group">
+                                    <label for="sessionTimeout">Session Timeout (minutes)</label>
+                                    <input type="number" id="sessionTimeout" name="sessionTimeout" min="5" max="120" value="30">
+                                </div>
+                                <button type="submit" class="save-button">Save Security Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator hidden">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    
+
+</body>
+</html>
